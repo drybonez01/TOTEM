@@ -16,6 +16,8 @@ import java.util.List;
 @RequestMapping("api/v1/psi")
 @RestController
 public class PsiClassBeanController {
+    //TODO sviluppare un sistema in grado di salvare in una directory locale informazioni sui test smell
+    //TODO salvare tali informazioni in un json
     private final PsiClassBeanService psiClassBeanService;
 
     @Autowired
