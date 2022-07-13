@@ -2,7 +2,7 @@ package drybonez01.totem_spring.model.detectionTools.textualRules;
 
 import drybonez01.totem_spring.model.PsiClassBean;
 import drybonez01.totem_spring.model.PsiMethodBean;
-import drybonez01.totem_spring.model.testSmellInfo.MethodWithEagerTest;
+import drybonez01.totem_spring.model.testSmellInfo.methodSmellInfo.MethodWithEagerTest;
 
 import java.util.ArrayList;
 import java.util.List;

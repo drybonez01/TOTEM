@@ -7,7 +7,8 @@ import com.intellij.psi.*;
 import java.util.ArrayList;
 
 public abstract class BeanGenerator {
-    public static PsiClassBean generateClassBean(PsiClass psiClass,
+    public static PsiClassBean generateClassBean(String projectName,
+                                                 PsiClass psiClass,
                                                  PsiClass productionClass) {
         ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClass);
 
@@ -23,13 +24,18 @@ public abstract class BeanGenerator {
 
         PsiClassBean productionClassBean;
         if (productionClass != null) {
-            productionClassBean = generateClassBean(productionClass, null);
+            productionClassBean = generateClassBean(projectName, productionClass, null);
         } else {
             productionClassBean = null;
         }
 
-        return new PsiClassBean(psiClass.getName(), null, psiMethodBeans,
-                instanceVariablesString, productionClassBean);
+        return new PsiClassBean(
+                projectName,
+                psiClass.getName(),
+                null,
+                psiMethodBeans,
+                instanceVariablesString,
+                productionClassBean);
     }
 
     public static PsiMethodBean generateMethodBean(PsiMethod psiMethod,

@@ -55,7 +55,10 @@ public class StartDetectionAction extends AnAction {
             if (ClassDetector.isTestClass(psiClass)) {
                 PsiClass productionClass = ClassDetector.findProductionClass(psiClass, classes);
                 if (productionClass != null) {
-                    testClasses.add(BeanGenerator.generateClassBean(psiClass, productionClass));
+                    testClasses.add(BeanGenerator.generateClassBean(
+                            e.getProject().getName(),
+                            psiClass,
+                            productionClass));
                 }
             }
         }

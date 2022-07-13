@@ -5,17 +5,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
 public class PsiClassBean {
+    private String projectName;
     private String className;
     private String packageName;
     private ArrayList<PsiMethodBean> psiMethodBeans;
     private ArrayList<String> instanceVariables;
     private PsiClassBean productionClass;
 
-    public PsiClassBean(@JsonProperty("className") String className,
+    public PsiClassBean(@JsonProperty("projectName") String projectName,
+                        @JsonProperty("className") String className,
                         @JsonProperty("packageName") String packageName,
                         @JsonProperty("psiMethodBeans") ArrayList<PsiMethodBean> psiMethodBeans,
                         @JsonProperty("instanceVariables") ArrayList<String> instanceVariables,
                         @JsonProperty("productionClass") PsiClassBean productionClass) {
+        this.projectName = projectName;
         this.className = className;
         this.packageName = packageName;
         this.psiMethodBeans = psiMethodBeans;
@@ -63,12 +66,22 @@ public class PsiClassBean {
         this.productionClass = productionClass;
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
     @Override
     public String toString() {
         return "PsiClassBean{" +
-                "className='" + className + '\'' +
+                "projectName='" + projectName + '\'' +
+                ", className='" + className + '\'' +
                 ", packageName='" + packageName + '\'' +
                 ", psiMethodBeans=" + psiMethodBeans +
+                ", instanceVariables=" + instanceVariables +
                 ", productionClass=" + productionClass +
                 '}';
     }

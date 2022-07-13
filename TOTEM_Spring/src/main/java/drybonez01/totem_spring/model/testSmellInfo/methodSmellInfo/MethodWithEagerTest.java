@@ -1,4 +1,4 @@
-package drybonez01.totem_spring.model.testSmellInfo;
+package drybonez01.totem_spring.model.testSmellInfo.methodSmellInfo;
 
 import drybonez01.totem_spring.model.PsiMethodBean;
 

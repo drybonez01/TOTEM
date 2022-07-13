@@ -2,6 +2,7 @@ package beans;
 import java.util.ArrayList;
 
 public class PsiClassBean {
+    private String projectName;
     private String className;
     private String packageName;
     private ArrayList<PsiMethodBean> psiMethodBeans;
@@ -9,11 +10,13 @@ public class PsiClassBean {
 
     private PsiClassBean productionClass;
 
-    public PsiClassBean(String className,
+    public PsiClassBean(String projectName,
+                        String className,
                         String packageName,
                         ArrayList<PsiMethodBean> psiMethodBeans,
                         ArrayList<String> instanceVariables,
                         PsiClassBean productionClass) {
+        this.projectName = projectName;
         this.className = className;
         this.packageName = packageName;
         this.psiMethodBeans = psiMethodBeans;
@@ -61,12 +64,22 @@ public class PsiClassBean {
         this.productionClass = productionClass;
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
     @Override
     public String toString() {
         return "PsiClassBean{" +
-                "className='" + className + '\'' +
+                "projectName='" + projectName + '\'' +
+                ", className='" + className + '\'' +
                 ", packageName='" + packageName + '\'' +
                 ", psiMethodBeans=" + psiMethodBeans +
+                ", instanceVariables=" + instanceVariables +
                 ", productionClass=" + productionClass +
                 '}';
     }
