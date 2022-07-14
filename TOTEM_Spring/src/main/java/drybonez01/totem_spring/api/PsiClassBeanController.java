@@ -1,23 +1,26 @@
 package drybonez01.totem_spring.api;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import drybonez01.totem_spring.model.PsiClassBean;
 import drybonez01.totem_spring.model.detectionTools.structuralRules.LackOfCohesionOfTestSmellStructural;
 import drybonez01.totem_spring.model.detectionTools.textualRules.EagerTestTextual;
 import drybonez01.totem_spring.model.detectionTools.textualRules.GeneralFixtureTextual;
+import drybonez01.totem_spring.model.testSmellInfo.ProjectInfo;
 import drybonez01.totem_spring.model.testSmellInfo.methodSmellInfo.MethodWithEagerTest;
 import drybonez01.totem_spring.model.testSmellInfo.methodSmellInfo.MethodWithGeneralFixture;
 import drybonez01.totem_spring.service.PsiClassBeanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("api/v1/psi")
 @RestController
 public class PsiClassBeanController {
-    //TODO sviluppare un sistema in grado di salvare in una directory locale informazioni sui test smell
-    //TODO salvare tali informazioni in un json
     private final PsiClassBeanService psiClassBeanService;
 
     @Autowired
@@ -27,8 +30,17 @@ public class PsiClassBeanController {
 
     @PostMapping
     public void addPsiClassBean(@RequestBody PsiClassBean psiClassBean) {
-        System.out.println("Oggetto ricevuto");
         psiClassBeanService.addPsiClassBean(psiClassBean);
+
+        // TODO completare il salvataggio dei json
+
+        ProjectInfo projectInfo = new ProjectInfo(psiClassBean.getProjectName(), 0);
+        try (Writer writer = new FileWriter(projectInfo.getProjectName() + ".json")) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(projectInfo, writer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @GetMapping("/getAllClasses")

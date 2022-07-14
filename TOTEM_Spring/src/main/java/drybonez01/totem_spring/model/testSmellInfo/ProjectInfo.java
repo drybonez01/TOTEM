@@ -105,4 +105,20 @@ public class ProjectInfo {
     public void setClassesWithLackOfCohesion(List<ClassWithLackOfCohesion> classesWithLackOfCohesion) {
         this.classesWithLackOfCohesion = classesWithLackOfCohesion;
     }
+
+    @Override
+    public String toString() {
+        return "ProjectInfo{" +
+                "projectName='" + projectName + '\'' +
+                ", numberOfTestClasses=" + numberOfTestClasses +
+                ", numberOfClassesWithEagerTest=" + numberOfClassesWithEagerTest +
+                ", numberOfMethodsCausingEagerTest=" + numberOfMethodsCausingEagerTest +
+                ", classesWithEagerTest=" + classesWithEagerTest +
+                ", numberOfClassesWithGeneralFixture=" + numberOfClassesWithGeneralFixture +
+                ", numberOfMethodsCausingGeneralFixture=" + numberOfMethodsCausingGeneralFixture +
+                ", classesWithGeneralFixture=" + classesWithGeneralFixture +
+                ", numberOfClassesWithLackOfCohesion=" + numberOfClassesWithLackOfCohesion +
+                ", classesWithLackOfCohesion=" + classesWithLackOfCohesion +
+                '}';
+    }
 }
