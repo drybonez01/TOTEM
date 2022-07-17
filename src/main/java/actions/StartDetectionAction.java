@@ -66,6 +66,11 @@ public class StartDetectionAction extends AnAction {
         List<ClassWithEagerTest> classesWithEagerTest = new ArrayList<>();
         List<ClassWithGeneralFixture> classesWithGeneralFixture = new ArrayList<>();
         List<ClassWithLackOfCohesion> classesWithLackOfCohesion = new ArrayList<>();
+        try {
+            HostConnection.deleteProjectResults(e.getProject().getName());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
         for (PsiClassBean testClass: testClasses) {
             try {
                 // Clean DB

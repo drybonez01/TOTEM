@@ -33,6 +33,16 @@ public abstract class HostConnection {
         //System.out.println(code);
     }
 
+    public static void deleteProjectResults(String projectName) throws IOException {
+        URL url = new URL(
+                "http://localhost:8080/api/v1/psi/deleteProjectResults" +
+                "?projectName=" + projectName);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+
+        int code = con.getResponseCode();
+    }
+
     public static void cleanHostDB() throws IOException {
         URL url = new URL("http://localhost:8080/api/v1/psi/deleteAllClasses");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
