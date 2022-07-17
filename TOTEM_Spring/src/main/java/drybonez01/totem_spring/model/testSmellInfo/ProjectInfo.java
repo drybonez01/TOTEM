@@ -4,6 +4,7 @@ import drybonez01.totem_spring.model.testSmellInfo.classSmellInfo.ClassWithEager
 import drybonez01.totem_spring.model.testSmellInfo.classSmellInfo.ClassWithGeneralFixture;
 import drybonez01.totem_spring.model.testSmellInfo.classSmellInfo.ClassWithLackOfCohesion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectInfo {
@@ -24,6 +25,9 @@ public class ProjectInfo {
     public ProjectInfo(String projectName, int numberOfTestClasses) {
         this.projectName = projectName;
         this.numberOfTestClasses = numberOfTestClasses;
+        this.classesWithEagerTest = new ArrayList<>();
+        this.classesWithGeneralFixture = new ArrayList<>();
+        this.classesWithLackOfCohesion = new ArrayList<>();
     }
 
     public String getProjectName() {

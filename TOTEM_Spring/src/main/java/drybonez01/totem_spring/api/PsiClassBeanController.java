@@ -7,6 +7,9 @@ import drybonez01.totem_spring.model.detectionTools.structuralRules.LackOfCohesi
 import drybonez01.totem_spring.model.detectionTools.textualRules.EagerTestTextual;
 import drybonez01.totem_spring.model.detectionTools.textualRules.GeneralFixtureTextual;
 import drybonez01.totem_spring.model.testSmellInfo.ProjectInfo;
+import drybonez01.totem_spring.model.testSmellInfo.classSmellInfo.ClassWithEagerTest;
+import drybonez01.totem_spring.model.testSmellInfo.classSmellInfo.ClassWithGeneralFixture;
+import drybonez01.totem_spring.model.testSmellInfo.classSmellInfo.ClassWithLackOfCohesion;
 import drybonez01.totem_spring.model.testSmellInfo.methodSmellInfo.MethodWithEagerTest;
 import drybonez01.totem_spring.model.testSmellInfo.methodSmellInfo.MethodWithGeneralFixture;
 import drybonez01.totem_spring.service.PsiClassBeanService;
@@ -92,9 +95,23 @@ public class PsiClassBeanController {
     public List<PsiClassBean> getClassesWithEagerTest() {
         List<PsiClassBean> classesWithEagerTest = new ArrayList<>();
         for (PsiClassBean testClass: psiClassBeanService.getAllPsiClassBeans()) {
+            // Opening file to get data
+            String path = resultsDirectory + testClass.getProjectName() + ".json";
+            ProjectInfo projectInfo = readInfoFromFile(path);
+
+            // Eager Test detection
             if (EagerTestTextual.isEagerTest(testClass, testClass.getProductionClass())) {
                 classesWithEagerTest.add(testClass);
+
+                projectInfo.setNumberOfClassesWithEagerTest(projectInfo.getNumberOfClassesWithEagerTest()+1);
+                ClassWithEagerTest classWithEagerTest = new ClassWithEagerTest(testClass, new ArrayList<>());
+                List<ClassWithEagerTest> newClasses = projectInfo.getClassesWithEagerTest();
+                newClasses.add(classWithEagerTest);
+                projectInfo.setClassesWithEagerTest(newClasses);
             }
+
+            // Opening file to write data
+            writeInfoToFile(path, projectInfo);
         }
         return classesWithEagerTest;
     }
@@ -103,8 +120,25 @@ public class PsiClassBeanController {
     public List<MethodWithEagerTest> getMethodsWithEagerTest() {
         List<MethodWithEagerTest> methodsWithEagerTest = new ArrayList<>();
         for (PsiClassBean testClass: psiClassBeanService.getAllPsiClassBeans()) {
-            methodsWithEagerTest.addAll(EagerTestTextual.checkMethodsThatCauseEagerTest(testClass,
+            List<MethodWithEagerTest> detectedMethods = new ArrayList<>(EagerTestTextual.checkMethodsThatCauseEagerTest(testClass,
                     testClass.getProductionClass()));
+            methodsWithEagerTest.addAll(detectedMethods);
+
+            // Opening file to get data
+            String path = resultsDirectory + testClass.getProjectName() + ".json";
+            ProjectInfo projectInfo = readInfoFromFile(path);
+
+            // Updating project info
+            projectInfo.setNumberOfMethodsCausingEagerTest(detectedMethods.size());
+            for (ClassWithEagerTest classWithEagerTest: projectInfo.getClassesWithEagerTest()) {
+                if (classWithEagerTest.getClassWithEagerTest().getClassName().equals(testClass.getClassName())) {
+                    classWithEagerTest.setMethodsWithEagerTest(detectedMethods);
+                    break;
+                }
+            }
+
+            // Opening file to write data
+            writeInfoToFile(path, projectInfo);
         }
         return methodsWithEagerTest;
     }
@@ -113,9 +147,23 @@ public class PsiClassBeanController {
     public List<PsiClassBean> getClassesWithGeneralFixture() {
         List<PsiClassBean> classesWithGeneralFixture = new ArrayList<>();
         for (PsiClassBean testClass: psiClassBeanService.getAllPsiClassBeans()) {
+            // Opening file to get data
+            String path = resultsDirectory + testClass.getProjectName() + ".json";
+            ProjectInfo projectInfo = readInfoFromFile(path);
+
+            // General Fixture detection
             if (GeneralFixtureTextual.isGeneralFixture(testClass)) {
                 classesWithGeneralFixture.add(testClass);
+
+                projectInfo.setNumberOfClassesWithGeneralFixture(projectInfo.getNumberOfClassesWithGeneralFixture()+1);
+                ClassWithGeneralFixture classWithGeneralFixture = new ClassWithGeneralFixture(testClass, new ArrayList<>());
+                List<ClassWithGeneralFixture> newClasses = projectInfo.getClassesWithGeneralFixture();
+                newClasses.add(classWithGeneralFixture);
+                projectInfo.setClassesWithGeneralFixture(newClasses);
             }
+
+            // Opening file to write data
+            writeInfoToFile(path, projectInfo);
         }
         return classesWithGeneralFixture;
     }
@@ -124,8 +172,25 @@ public class PsiClassBeanController {
     public List<MethodWithGeneralFixture> getMethodsWithGeneralFixture() {
         List<MethodWithGeneralFixture> methodsWithGeneralFixture = new ArrayList<>();
         for (PsiClassBean testClass: psiClassBeanService.getAllPsiClassBeans()) {
-            methodsWithGeneralFixture.addAll(
-                    GeneralFixtureTextual.checkMethodsThatCauseGeneralFixture(testClass));
+            List<MethodWithGeneralFixture> detectedMethods =
+                    new ArrayList<>(GeneralFixtureTextual.checkMethodsThatCauseGeneralFixture(testClass));
+            methodsWithGeneralFixture.addAll(detectedMethods);
+
+            // Opening file to get data
+            String path = resultsDirectory + testClass.getProjectName() + ".json";
+            ProjectInfo projectInfo = readInfoFromFile(path);
+
+            // Updating project info
+            projectInfo.setNumberOfMethodsCausingGeneralFixture(detectedMethods.size());
+            for (ClassWithGeneralFixture classWithGeneralFixture: projectInfo.getClassesWithGeneralFixture()) {
+                if (classWithGeneralFixture.getClassWithGeneralFixture().getClassName().equals(testClass.getClassName())) {
+                    classWithGeneralFixture.setMethodsWithGeneralFixture(detectedMethods);
+                    break;
+                }
+            }
+
+            // Opening file to write data
+            writeInfoToFile(path, projectInfo);
         }
         return methodsWithGeneralFixture;
     }
@@ -134,9 +199,23 @@ public class PsiClassBeanController {
     public List<PsiClassBean> getClassesWithLackOfCohesion() {
         List<PsiClassBean> classesWithLackOfCohesion = new ArrayList<>();
         for (PsiClassBean testClass: psiClassBeanService.getAllPsiClassBeans()) {
+            // Opening file to get data
+            String path = resultsDirectory + testClass.getProjectName() + ".json";
+            ProjectInfo projectInfo = readInfoFromFile(path);
+
+            // Lack of Cohesion detection
             if (LackOfCohesionOfTestSmellStructural.isLackOfCohesion(testClass)) {
                 classesWithLackOfCohesion.add(testClass);
+
+                projectInfo.setNumberOfClassesWithLackOfCohesion(projectInfo.getNumberOfClassesWithLackOfCohesion()+1);
+                ClassWithLackOfCohesion classWithLackOfCohesion = new ClassWithLackOfCohesion(testClass);
+                List<ClassWithLackOfCohesion> newClasses = projectInfo.getClassesWithLackOfCohesion();
+                newClasses.add(classWithLackOfCohesion);
+                projectInfo.setClassesWithLackOfCohesion(newClasses);
             }
+
+            // Opening file to write data
+            writeInfoToFile(path, projectInfo);
         }
         return classesWithLackOfCohesion;
     }
@@ -150,6 +229,30 @@ public class PsiClassBeanController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private ProjectInfo readInfoFromFile(String path) {
+        ProjectInfo projectInfo;
+        try {
+            Reader reader = new FileReader(path);
+            Gson gsonReader = new Gson();
+            projectInfo = gsonReader.fromJson(reader, ProjectInfo.class);
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return projectInfo;
+    }
+
+    private void writeInfoToFile(String path, ProjectInfo projectInfo) {
+        try {
+            Writer writer = new FileWriter(path, false);
+            Gson gsonWriter = new GsonBuilder().setPrettyPrinting().create();
+            gsonWriter.toJson(projectInfo, writer);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
